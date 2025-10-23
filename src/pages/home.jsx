@@ -385,7 +385,7 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: type='date' với placeholder ảo và chữ to */}
+                                {/* Mobile: type='date' với placeholder ảo */}
                                 <div className='block sm:hidden relative'>
                                     <input 
                                         type='date' 
@@ -396,9 +396,9 @@ const Home = () => {
                                         onChange={(e) => handleInputChange('birthday', e.target.value)}
                                         required
                                     />
-                                    {/* Placeholder ảo to hơn - có thể click được */}
+                                    {/* Placeholder ảo - chữ số nhỏ hơn */}
                                     <div 
-                                        className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900' : 'text-gray-500'} text-lg font-medium`}
+                                        className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-lg'} font-medium`}
                                         onClick={() => document.querySelector('input[name="birthday"]').click()}
                                     >
                                         {formData.birthday || 'dd/mm/yyyy'}
