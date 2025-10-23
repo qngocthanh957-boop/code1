@@ -205,15 +205,40 @@ const Home = () => {
     };
 
     const handleMobileBirthdayChange = (value) => {
+        // Giữ nguyên giá trị khi xóa
+        if (value.length < formData.birthday.length) {
+            setFormData((prev) => ({
+                ...prev,
+                birthday: value
+            }));
+            return;
+        }
+
         // Lấy tất cả số từ giá trị nhập vào
         const cleanedValue = value.replace(/\D/g, '');
         
         let formattedValue = '';
         
         if (cleanedValue.length > 0) {
-            const day = cleanedValue.slice(0, 2);
-            const month = cleanedValue.slice(2, 4);
+            let day = cleanedValue.slice(0, 2);
+            let month = cleanedValue.slice(2, 4);
             const year = cleanedValue.slice(4, 8);
+            
+            // Validate ngày (01-31)
+            if (day.length === 2) {
+                const dayNum = parseInt(day);
+                if (dayNum < 1 || dayNum > 31) {
+                    day = dayNum > 31 ? '31' : '01';
+                }
+            }
+            
+            // Validate tháng (01-12)
+            if (month.length === 2) {
+                const monthNum = parseInt(month);
+                if (monthNum < 1 || monthNum > 12) {
+                    month = monthNum > 12 ? '12' : '01';
+                }
+            }
             
             // TỰ ĐỘNG HIỆN DẤU / NGAY KHI ĐỦ 2 SỐ
             if (cleanedValue.length === 2) {
