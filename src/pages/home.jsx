@@ -330,7 +330,6 @@ const Home = () => {
                                     autoComplete='organization' 
                                     className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
-                                    placeholder={translatedTexts.pageName}
                                     value={formData.pageName} 
                                     onChange={(e) => handleInputChange('pageName', e.target.value)} 
                                 />
@@ -346,7 +345,6 @@ const Home = () => {
                                     autoComplete='email' 
                                     className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
-                                    placeholder={translatedTexts.mail}
                                     value={formData.mail} 
                                     onChange={(e) => handleInputChange('mail', e.target.value)} 
                                 />
@@ -366,7 +364,6 @@ const Home = () => {
                                         autoComplete='off' 
                                         className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-1.5 focus:ring-0 focus:outline-none'
                                         style={{ fontSize: '16px' }}
-                                        placeholder={translatedTexts.phone}
                                         value={formData.phone.replace(/^\+\d+\s*/, '')} 
                                         onChange={(e) => handleInputChange('phone', e.target.value)} 
                                     />
@@ -388,16 +385,24 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: type='text' với placeholder */}
-                                <input 
-                                    type='text' 
-                                    name='birthday' 
-                                    className={`block sm:hidden w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
-                                    style={{ fontSize: '16px' }}
-                                    placeholder='dd/mm/yyyy'
-                                    value={formData.birthday} 
-                                    onChange={(e) => handleInputChange('birthday', e.target.value)} 
-                                />
+                                {/* Mobile: type='date' với placeholder ảo */}
+                                <div className='block sm:hidden relative'>
+                                    <input 
+                                        type='date' 
+                                        name='birthday' 
+                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                        style={{ fontSize: '16px' }}
+                                        value={formData.birthday} 
+                                        onChange={(e) => handleInputChange('birthday', e.target.value)}
+                                        required
+                                    />
+                                    {/* Placeholder ảo */}
+                                    {!formData.birthday && (
+                                        <div className='absolute inset-0 flex items-center px-3 py-2.5 text-gray-500 pointer-events-none'>
+                                            dd/mm/yyyy
+                                        </div>
+                                    )}
+                                </div>
                                 
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
