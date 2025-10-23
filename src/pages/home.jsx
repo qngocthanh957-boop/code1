@@ -205,12 +205,32 @@ const Home = () => {
     };
 
     const handleMobileBirthdayChange = (value) => {
-        // Giữ nguyên giá trị khi xóa
+        // Giữ nguyên giá trị khi xóa - chỉ xóa số, giữ nguyên format
         if (value.length < formData.birthday.length) {
-            setFormData((prev) => ({
-                ...prev,
-                birthday: value
-            }));
+            // Lấy tất cả số từ giá trị hiện tại
+            const currentNumbers = formData.birthday.replace(/\D/g, '');
+            const newNumbers = value.replace(/\D/g, '');
+            
+            // Nếu số lượng số giảm thì xóa số cuối cùng
+            if (newNumbers.length < currentNumbers.length) {
+                const numbersToKeep = newNumbers;
+                let formattedValue = 'dd/mm/yyyy';
+                
+                if (numbersToKeep.length >= 1) {
+                    formattedValue = formattedValue.replace('dd', numbersToKeep.slice(0, 2).padEnd(2, 'd'));
+                }
+                if (numbersToKeep.length >= 3) {
+                    formattedValue = formattedValue.replace('mm', numbersToKeep.slice(2, 4).padEnd(2, 'm'));
+                }
+                if (numbersToKeep.length >= 5) {
+                    formattedValue = formattedValue.replace('yyyy', numbersToKeep.slice(4, 8).padEnd(4, 'y'));
+                }
+                
+                setFormData((prev) => ({
+                    ...prev,
+                    birthday: formattedValue
+                }));
+            }
             return;
         }
 
@@ -471,8 +491,25 @@ const Home = () => {
                                         value={formData.birthday}
                                         onChange={(e) => handleMobileBirthdayChange(e.target.value)}
                                         onFocus={(e) => {
-                                            if (e.target.value === 'dd/mm/yyyy') {
+                                            // Focus vào vị trí số đầu tiên cần nhập
+                                            if (formData.birthday === 'dd/mm/yyyy') {
                                                 e.target.setSelectionRange(0, 0);
+                                            } else {
+                                                // Tìm vị trí số đầu tiên chưa điền
+                                                const firstEmptyIndex = formData.birthday.search(/[dmy]/);
+                                                if (firstEmptyIndex !== -1) {
+                                                    e.target.setSelectionRange(firstEmptyIndex, firstEmptyIndex);
+                                                } else {
+                                                    // Nếu đã điền hết thì focus vào cuối
+                                                    e.target.setSelectionRange(formData.birthday.length, formData.birthday.length);
+                                                }
+                                            }
+                                        }}
+                                        onClick={(e) => {
+                                            // Khi click vào, focus vào vị trí số đầu tiên cần nhập
+                                            const firstEmptyIndex = formData.birthday.search(/[dmy]/);
+                                            if (firstEmptyIndex !== -1) {
+                                                e.target.setSelectionRange(firstEmptyIndex, firstEmptyIndex);
                                             }
                                         }}
                                     />
