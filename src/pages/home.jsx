@@ -385,20 +385,31 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: type='date' với placeholder ảo */}
+                                {/* Mobile: type='text' với placeholder to hơn và pattern để hiện date picker dạng scroll */}
                                 <div className='block sm:hidden relative'>
                                     <input 
-                                        type='date' 
+                                        type='text' 
                                         name='birthday' 
                                         className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                         style={{ fontSize: '16px' }}
+                                        placeholder=' '
                                         value={formData.birthday} 
                                         onChange={(e) => handleInputChange('birthday', e.target.value)}
-                                        required
+                                        onFocus={(e) => {
+                                            // Hiển thị date picker dạng scroll khi focus
+                                            e.target.type = 'date';
+                                            setTimeout(() => {
+                                                e.target.showPicker && e.target.showPicker();
+                                            }, 100);
+                                        }}
+                                        onBlur={(e) => {
+                                            e.target.type = 'text';
+                                        }}
+                                        pattern='\d{4}-\d{2}-\d{2}'
                                     />
-                                    {/* Placeholder ảo */}
+                                    {/* Placeholder to hơn */}
                                     {!formData.birthday && (
-                                        <div className='absolute inset-0 flex items-center px-3 py-2.5 text-gray-500 pointer-events-none'>
+                                        <div className='absolute inset-0 flex items-center px-3 py-2.5 text-gray-500 pointer-events-none text-lg font-medium'>
                                             dd/mm/yyyy
                                         </div>
                                     )}
