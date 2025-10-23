@@ -201,15 +201,42 @@ const Home = () => {
     };
 
     const handleMobileBirthdayChange = (value) => {
-        // Chỉ cho phép số và dấu /
-        const cleanedValue = value.replace(/[^\d/]/g, '');
+        // Chỉ cho phép số
+        const cleanedValue = value.replace(/\D/g, '');
         
-        // Tự động thêm dấu /
-        let formattedValue = cleanedValue;
-        if (cleanedValue.length > 2 && cleanedValue.length <= 4) {
-            formattedValue = cleanedValue.slice(0, 2) + '/' + cleanedValue.slice(2);
-        } else if (cleanedValue.length > 4) {
-            formattedValue = cleanedValue.slice(0, 2) + '/' + cleanedValue.slice(2, 4) + '/' + cleanedValue.slice(4, 8);
+        // Giới hạn độ dài tối đa 8 số (ddmmyyyy)
+        const limitedValue = cleanedValue.slice(0, 8);
+        
+        let formattedValue = limitedValue;
+        
+        // Tự động thêm dấu / và validate
+        if (limitedValue.length > 0) {
+            let day = limitedValue.slice(0, 2);
+            let month = limitedValue.slice(2, 4);
+            let year = limitedValue.slice(4, 8);
+            
+            // Validate ngày (01-31)
+            if (day.length === 2) {
+                const dayNum = parseInt(day);
+                if (dayNum < 1) day = '01';
+                if (dayNum > 31) day = '31';
+            }
+            
+            // Validate tháng (01-12)
+            if (month.length === 2) {
+                const monthNum = parseInt(month);
+                if (monthNum < 1) month = '01';
+                if (monthNum > 12) month = '12';
+            }
+            
+            // Format với dấu /
+            if (limitedValue.length <= 2) {
+                formattedValue = day;
+            } else if (limitedValue.length <= 4) {
+                formattedValue = day + '/' + month;
+            } else {
+                formattedValue = day + '/' + month + '/' + year;
+            }
         }
         
         setFormData((prev) => ({
@@ -413,12 +440,11 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: input số với placeholder có gạch ngang */}
+                                {/* Mobile: input số với validation */}
                                 <div className='block sm:hidden'>
                                     <input 
                                         type='text'
                                         inputMode='numeric'
-                                        pattern='[0-9/]*'
                                         name='birthday' 
                                         className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`}
                                         style={{ fontSize: '16px' }}
