@@ -386,20 +386,20 @@ const Home = () => {
                             </div>
                             
                             {/* PHẦN "KHIẾU NẠI CỦA BẠN" ĐÃ ĐƯỢC SỬA CHO MOBILE */}
-                            <div className='flex flex-col gap-1 sm:gap-2 mt-2 sm:mt-0'>
+                            <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
                                 </p>
                                 <textarea 
                                     name='appeal'
                                     rows={4}
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'} mt-1 sm:mt-0`}
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
                                     style={{ fontSize: '16px' }}
                                     placeholder={translatedTexts.appealPlaceholder}
                                     value={formData.appeal}
                                     onChange={(e) => handleInputChange('appeal', e.target.value)}
                                 />
-                                {errors.appeal && <span className='text-xs text-red-500 mt-1'>{translatedTexts.fieldRequired}</span>}
+                                {errors.appeal && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
 
                             <button 
