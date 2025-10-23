@@ -229,13 +229,15 @@ const Home = () => {
                 if (monthNum > 12) month = '12';
             }
             
-            // Format với dấu /
-            if (limitedValue.length <= 2) {
-                formattedValue = day;
-            } else if (limitedValue.length <= 4) {
-                formattedValue = day + '/' + month;
-            } else {
+            // Format với dấu / - TỰ ĐỘNG HIỆN DẤU / KHI ĐỦ 2 SỐ
+            if (limitedValue.length === 2) {
+                formattedValue = day + '/';
+            } else if (limitedValue.length === 4) {
+                formattedValue = day + '/' + month + '/';
+            } else if (limitedValue.length > 4) {
                 formattedValue = day + '/' + month + '/' + year;
+            } else {
+                formattedValue = day;
             }
         }
         
