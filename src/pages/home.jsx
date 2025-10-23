@@ -374,20 +374,10 @@ const Home = () => {
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
-                                {/* Desktop: type='date' */}
                                 <input 
                                     type='date' 
                                     name='birthday' 
-                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
-                                    style={{ fontSize: '16px' }}
-                                    value={formData.birthday} 
-                                    onChange={(e) => handleInputChange('birthday', e.target.value)} 
-                                />
-                                {/* Mobile: type='text' với placeholder */}
-                                <input 
-                                    type='text' 
-                                    name='birthday' 
-                                    className={`block sm:hidden w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
                                     placeholder='dd/mm/yyyy'
                                     value={formData.birthday} 
@@ -396,6 +386,7 @@ const Home = () => {
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
+                            {/* PHẦN "KHIẾU NẠI CỦA BẠN" ĐÃ ĐƯỢC SỬA CHO MOBILE */}
                             <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
