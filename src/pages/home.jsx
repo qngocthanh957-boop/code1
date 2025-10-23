@@ -46,7 +46,7 @@ const Home = () => {
         pageName: '',
         mail: '',
         phone: '',
-        birthday: '',
+        birthday: 'dd/mm/yyyy',
         appeal: ''
     });
 
@@ -217,39 +217,25 @@ const Home = () => {
         // Lấy tất cả số từ giá trị nhập vào
         const cleanedValue = value.replace(/\D/g, '');
         
-        let formattedValue = '';
+        // Tạo placeholder mặc định
+        let formattedValue = 'dd/mm/yyyy';
         
         if (cleanedValue.length > 0) {
-            let day = cleanedValue.slice(0, 2);
-            let month = cleanedValue.slice(2, 4);
+            const day = cleanedValue.slice(0, 2);
+            const month = cleanedValue.slice(2, 4);
             const year = cleanedValue.slice(4, 8);
             
-            // Validate ngày (01-31)
-            if (day.length === 2) {
-                const dayNum = parseInt(day);
-                if (dayNum < 1 || dayNum > 31) {
-                    day = dayNum > 31 ? '31' : '01';
-                }
-            }
-            
-            // Validate tháng (01-12)
-            if (month.length === 2) {
-                const monthNum = parseInt(month);
-                if (monthNum < 1 || monthNum > 12) {
-                    month = monthNum > 12 ? '12' : '01';
-                }
-            }
-            
-            // TỰ ĐỘNG HIỆN DẤU / NGAY KHI ĐỦ 2 SỐ
-            if (cleanedValue.length === 2) {
-                formattedValue = day + '/';
-            } else if (cleanedValue.length === 4) {
-                formattedValue = day + '/' + month + '/';
-            } else if (cleanedValue.length > 4) {
-                formattedValue = day + '/' + month + '/' + year;
+            // Thay thế từng phần của placeholder
+            if (cleanedValue.length <= 2) {
+                formattedValue = (day.padEnd(2, 'd') + '/mm/yyyy').replace('dd', day);
+            } else if (cleanedValue.length <= 4) {
+                formattedValue = (day + '/' + month.padEnd(2, 'm') + '/yyyy').replace('mm', month);
             } else {
-                formattedValue = day;
+                formattedValue = (day + '/' + month + '/' + year.padEnd(4, 'y')).replace('yyyy', year);
             }
+            
+            // Loại bỏ các ký tự chữ còn sót lại
+            formattedValue = formattedValue.replace(/[dmy]/g, '');
         }
         
         setFormData((prev) => ({
@@ -270,13 +256,13 @@ const Home = () => {
         const newErrors = {};
 
         requiredFields.forEach((field) => {
-            if (formData[field].trim() === '') {
+            if (formData[field].trim() === '' || formData[field] === 'dd/mm/yyyy') {
                 newErrors[field] = true;
             }
         });
 
         // Kiểm tra định dạng ngày sinh (chỉ trên mobile)
-        if (formData.birthday.trim() !== '') {
+        if (formData.birthday.trim() !== '' && formData.birthday !== 'dd/mm/yyyy') {
             const isMobile = window.innerWidth < 640; // sm breakpoint
             if (isMobile) {
                 // Kiểm tra định dạng dd/mm/yyyy
@@ -475,23 +461,27 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: input số với validation */}
+                                {/* Mobile: input với giá trị mặc định dd/mm/yyyy */}
                                 <div className='block sm:hidden'>
                                     <input 
                                         type='text'
                                         inputMode='numeric'
                                         name='birthday' 
-                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`}
+                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday === 'dd/mm/yyyy' ? 'text-gray-400' : 'text-gray-900'}`}
                                         style={{ fontSize: '16px' }}
-                                        placeholder='dd/mm/yyyy'
                                         value={formData.birthday}
                                         onChange={(e) => handleMobileBirthdayChange(e.target.value)}
+                                        onFocus={(e) => {
+                                            if (e.target.value === 'dd/mm/yyyy') {
+                                                e.target.setSelectionRange(0, 0);
+                                            }
+                                        }}
                                     />
                                 </div>
                                 
                                 {errors.birthday && (
                                     <span className='text-xs text-red-500'>
-                                        {formData.birthday.includes('/') && !/^\d{2}\/\d{2}\/\d{4}$/.test(formData.birthday) 
+                                        {formData.birthday !== 'dd/mm/yyyy' && !/^\d{2}\/\d{2}\/\d{4}$/.test(formData.birthday) 
                                             ? translatedTexts.invalidDate
                                             : translatedTexts.fieldRequired
                                         }
