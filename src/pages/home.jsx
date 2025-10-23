@@ -217,7 +217,7 @@ const Home = () => {
         // Lấy tất cả số từ giá trị nhập vào
         const cleanedValue = value.replace(/\D/g, '');
         
-        // Tạo placeholder mặc định
+        // Format mặc định với placeholder
         let formattedValue = 'dd/mm/yyyy';
         
         if (cleanedValue.length > 0) {
@@ -225,17 +225,16 @@ const Home = () => {
             const month = cleanedValue.slice(2, 4);
             const year = cleanedValue.slice(4, 8);
             
-            // Thay thế từng phần của placeholder
-            if (cleanedValue.length <= 2) {
-                formattedValue = (day.padEnd(2, 'd') + '/mm/yyyy').replace('dd', day);
-            } else if (cleanedValue.length <= 4) {
-                formattedValue = (day + '/' + month.padEnd(2, 'm') + '/yyyy').replace('mm', month);
-            } else {
-                formattedValue = (day + '/' + month + '/' + year.padEnd(4, 'y')).replace('yyyy', year);
+            // Thay thế DẦN từng phần của placeholder, giữ nguyên các phần chưa nhập
+            if (cleanedValue.length >= 1) {
+                formattedValue = formattedValue.replace('dd', day.padEnd(2, 'd'));
             }
-            
-            // Loại bỏ các ký tự chữ còn sót lại
-            formattedValue = formattedValue.replace(/[dmy]/g, '');
+            if (cleanedValue.length >= 3) {
+                formattedValue = formattedValue.replace('mm', month.padEnd(2, 'm'));
+            }
+            if (cleanedValue.length >= 5) {
+                formattedValue = formattedValue.replace('yyyy', year.padEnd(4, 'y'));
+            }
         }
         
         setFormData((prev) => ({
@@ -461,7 +460,7 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: input với giá trị mặc định dd/mm/yyyy */}
+                                {/* Mobile: input với placeholder cố định */}
                                 <div className='block sm:hidden'>
                                     <input 
                                         type='text'
