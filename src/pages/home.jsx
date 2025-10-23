@@ -385,34 +385,24 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: type='text' với placeholder to hơn và pattern để hiện date picker dạng scroll */}
+                                {/* Mobile: type='date' với placeholder ảo và chữ to */}
                                 <div className='block sm:hidden relative'>
                                     <input 
-                                        type='text' 
+                                        type='date' 
                                         name='birthday' 
-                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
                                         style={{ fontSize: '16px' }}
-                                        placeholder=' '
                                         value={formData.birthday} 
                                         onChange={(e) => handleInputChange('birthday', e.target.value)}
-                                        onFocus={(e) => {
-                                            // Hiển thị date picker dạng scroll khi focus
-                                            e.target.type = 'date';
-                                            setTimeout(() => {
-                                                e.target.showPicker && e.target.showPicker();
-                                            }, 100);
-                                        }}
-                                        onBlur={(e) => {
-                                            e.target.type = 'text';
-                                        }}
-                                        pattern='\d{4}-\d{2}-\d{2}'
+                                        required
                                     />
-                                    {/* Placeholder to hơn */}
-                                    {!formData.birthday && (
-                                        <div className='absolute inset-0 flex items-center px-3 py-2.5 text-gray-500 pointer-events-none text-lg font-medium'>
-                                            dd/mm/yyyy
-                                        </div>
-                                    )}
+                                    {/* Placeholder ảo to hơn - có thể click được */}
+                                    <div 
+                                        className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900' : 'text-gray-500'} text-lg font-medium`}
+                                        onClick={() => document.querySelector('input[name="birthday"]').click()}
+                                    >
+                                        {formData.birthday || 'dd/mm/yyyy'}
+                                    </div>
                                 </div>
                                 
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
