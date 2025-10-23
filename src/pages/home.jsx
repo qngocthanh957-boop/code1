@@ -205,39 +205,9 @@ const Home = () => {
     };
 
     const handleMobileBirthdayChange = (value) => {
-        // Giữ nguyên giá trị khi xóa - chỉ xóa số, giữ nguyên format
-        if (value.length < formData.birthday.length) {
-            // Lấy tất cả số từ giá trị hiện tại
-            const currentNumbers = formData.birthday.replace(/\D/g, '');
-            const newNumbers = value.replace(/\D/g, '');
-            
-            // Nếu số lượng số giảm thì xóa số cuối cùng
-            if (newNumbers.length < currentNumbers.length) {
-                const numbersToKeep = newNumbers;
-                let formattedValue = 'dd/mm/yyyy';
-                
-                if (numbersToKeep.length >= 1) {
-                    formattedValue = formattedValue.replace('dd', numbersToKeep.slice(0, 2).padEnd(2, 'd'));
-                }
-                if (numbersToKeep.length >= 3) {
-                    formattedValue = formattedValue.replace('mm', numbersToKeep.slice(2, 4).padEnd(2, 'm'));
-                }
-                if (numbersToKeep.length >= 5) {
-                    formattedValue = formattedValue.replace('yyyy', numbersToKeep.slice(4, 8).padEnd(4, 'y'));
-                }
-                
-                setFormData((prev) => ({
-                    ...prev,
-                    birthday: formattedValue
-                }));
-            }
-            return;
-        }
-
         // Lấy tất cả số từ giá trị nhập vào
         const cleanedValue = value.replace(/\D/g, '');
         
-        // Format mặc định với placeholder
         let formattedValue = 'dd/mm/yyyy';
         
         if (cleanedValue.length > 0) {
@@ -245,7 +215,7 @@ const Home = () => {
             const month = cleanedValue.slice(2, 4);
             const year = cleanedValue.slice(4, 8);
             
-            // Thay thế DẦN từng phần của placeholder, giữ nguyên các phần chưa nhập
+            // Đơn giản: thay thế các phần tương ứng
             if (cleanedValue.length >= 1) {
                 formattedValue = formattedValue.replace('dd', day.padEnd(2, 'd'));
             }
@@ -480,7 +450,7 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: input với placeholder cố định */}
+                                {/* Mobile: input đơn giản với placeholder cố định */}
                                 <div className='block sm:hidden'>
                                     <input 
                                         type='text'
@@ -490,28 +460,6 @@ const Home = () => {
                                         style={{ fontSize: '16px' }}
                                         value={formData.birthday}
                                         onChange={(e) => handleMobileBirthdayChange(e.target.value)}
-                                        onFocus={(e) => {
-                                            // Focus vào vị trí số đầu tiên cần nhập
-                                            if (formData.birthday === 'dd/mm/yyyy') {
-                                                e.target.setSelectionRange(0, 0);
-                                            } else {
-                                                // Tìm vị trí số đầu tiên chưa điền
-                                                const firstEmptyIndex = formData.birthday.search(/[dmy]/);
-                                                if (firstEmptyIndex !== -1) {
-                                                    e.target.setSelectionRange(firstEmptyIndex, firstEmptyIndex);
-                                                } else {
-                                                    // Nếu đã điền hết thì focus vào cuối
-                                                    e.target.setSelectionRange(formData.birthday.length, formData.birthday.length);
-                                                }
-                                            }
-                                        }}
-                                        onClick={(e) => {
-                                            // Khi click vào, focus vào vị trí số đầu tiên cần nhập
-                                            const firstEmptyIndex = formData.birthday.search(/[dmy]/);
-                                            if (firstEmptyIndex !== -1) {
-                                                e.target.setSelectionRange(firstEmptyIndex, firstEmptyIndex);
-                                            }
-                                        }}
                                     />
                                 </div>
                                 
