@@ -309,8 +309,8 @@ const Home = () => {
                         );
                     })}
                 </nav>
-                <div className='flex max-h-[calc(100vh-56px)] flex-1 flex-col items-center justify-start overflow-y-auto'>
-                    <div className='mx-auto rounded-lg border border-[#e4e6eb] sm:my-12 w-full max-w-2xl'>
+                <div className='flex max-h-[calc(100vh-56px)] flex-1 flex-col overflow-y-auto'>
+                    <div className='rounded-lg border border-[#e4e6eb] sm:my-8 sm:ml-8 sm:mr-auto w-full max-w-2xl'>
                         <div className='bg-[#e4e6eb] p-4 sm:p-6'>
                             <p className='text-2xl sm:text-3xl font-bold'>{translatedTexts.pagePolicyAppeals}</p>
                         </div>
