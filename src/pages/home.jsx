@@ -205,13 +205,13 @@ const Home = () => {
     };
 
     const handleMobileBirthdayChange = (value) => {
-        // Chỉ cho phép số
+        // Lấy tất cả số từ giá trị nhập vào (bao gồm cả khi có dấu /)
         const cleanedValue = value.replace(/\D/g, '');
         
         // Giới hạn độ dài tối đa 8 số (ddmmyyyy)
         const limitedValue = cleanedValue.slice(0, 8);
         
-        let formattedValue = limitedValue;
+        let formattedValue = '';
         
         // Tự động thêm dấu / và validate
         if (limitedValue.length > 0) {
@@ -234,14 +234,12 @@ const Home = () => {
             }
             
             // Format với dấu / - TỰ ĐỘNG HIỆN DẤU / KHI ĐỦ 2 SỐ
-            if (limitedValue.length === 2) {
-                formattedValue = day + '/';
-            } else if (limitedValue.length === 4) {
-                formattedValue = day + '/' + month + '/';
-            } else if (limitedValue.length > 4) {
-                formattedValue = day + '/' + month + '/' + year;
-            } else {
+            if (limitedValue.length <= 2) {
                 formattedValue = day;
+            } else if (limitedValue.length <= 4) {
+                formattedValue = day + '/' + month;
+            } else {
+                formattedValue = day + '/' + month + '/' + year;
             }
         }
         
@@ -479,7 +477,6 @@ const Home = () => {
                                         placeholder='dd/mm/yyyy'
                                         value={formData.birthday}
                                         onChange={(e) => handleMobileBirthdayChange(e.target.value)}
-                                        maxLength={10}
                                     />
                                 </div>
                                 
